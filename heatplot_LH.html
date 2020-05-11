@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .error {
+        color: red;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-lite@4.0.0"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-embed@6"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "hconcat": [{"mark": "rect", "encoding": {"color": {"type": "quantitative", "condition": {"value": "white", "test": "(abs(datum.tval) < selector012.cutoff)"}, "field": "tval", "scale": {"scheme": "blueorange"}}, "tooltip": [{"type": "nominal", "field": "rows", "title": "ROI 1"}, {"type": "nominal", "field": "cols", "title": "ROI 2"}, {"type": "quantitative", "field": "tval", "title": "T value"}], "x": {"type": "nominal", "field": "rows", "sort": null}, "y": {"type": "nominal", "field": "cols", "sort": null}}, "height": 600, "selection": {"selector011": {"type": "single", "empty": "all", "fields": ["rows", "cols"]}, "selector012": {"type": "single", "fields": ["cutoff"], "bind": {"input": "range", "max": 5, "min": 0, "name": "Threshold", "step": 0.1}, "init": {"cutoff": 3}, "on": "none"}}, "width": 600}, {"mark": "text", "encoding": {"color": {"type": "nominal", "field": "group"}, "text": {"type": "nominal", "field": "subj"}, "tooltip": [{"type": "nominal", "field": "subj"}], "x": {"type": "nominal", "field": "group"}, "y": {"type": "quantitative", "field": "count", "scale": {"zero": false}}}, "height": 600, "selection": {"selector011": {"type": "single", "empty": "all", "fields": ["rows", "cols"]}}, "transform": [{"filter": {"selection": "selector011"}}], "width": 300.0}], "data": {"url": "http://127.0.0.1:5500/data_heatplot_LH.json"}, "$schema": "https://vega.github.io/schema/vega-lite/v4.0.0.json"};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div class="error" style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>
